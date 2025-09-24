@@ -18,16 +18,85 @@ export default defineConfig({
     target: "es2015",
     rollupOptions: {
       output: {
+        // Enhanced chunking strategy for better performance
         manualChunks: {
+          // Core dependencies
           vendor: ["react", "react-dom"],
+
+          // UI library
           antd: ["antd", "@ant-design/icons"],
+
+          // Google APIs (heavy, separate chunk)
           google: ["googleapis", "google-auth-library"],
+
+          // Chart libraries (heavy, lazy loaded)
           charts: ["chart.js", "react-chartjs-2", "recharts"],
+
+          // State management
           redux: ["redux", "react-redux", "redux-thunk", "redux-persist"],
+
+          // Routing
+          router: ["react-router-dom"],
+
+          // Utilities
+          utils: ["lodash", "dayjs", "moment", "axios"],
+
+          // Performance monitoring
+          performance: ["web-vitals"],
+        },
+
+        // Optimize chunk names for caching
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId
+            ? chunkInfo.facadeModuleId
+                .split("/")
+                .pop()
+                .replace(".jsx", "")
+                .replace(".js", "")
+            : "chunk";
+          return `assets/${facadeModuleId}.[hash].js`;
+        },
+
+        // Optimize asset names
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name.split(".");
+          const ext = info[info.length - 1];
+
+          if (/\.(css)$/.test(assetInfo.name)) {
+            return `assets/css/[name].[hash].css`;
+          }
+          if (/\.(png|jpe?g|svg|gif|tiff|bmp|ico)$/i.test(assetInfo.name)) {
+            return `assets/images/[name].[hash].${ext}`;
+          }
+          if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name)) {
+            return `assets/fonts/[name].[hash].${ext}`;
+          }
+
+          return `assets/[name].[hash].${ext}`;
         },
       },
     },
+
+    // Performance optimizations
     chunkSizeWarningLimit: 1000,
+
+    // Terser options for better compression
+    terserOptions: {
+      compress: {
+        drop_console: process.env.NODE_ENV === "production",
+        drop_debugger: true,
+        pure_funcs: ["console.log", "console.warn"],
+        ecma: 2015,
+        passes: 2,
+      },
+      mangle: {
+        safari10: true,
+      },
+      format: {
+        comments: false,
+        ecma: 2015,
+      },
+    },
   },
 
   // Development server

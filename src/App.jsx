@@ -13,45 +13,107 @@ import Loading from "./components/Common/Loading";
 import Layout from "./components/layout/Layout";
 import { store } from "./store/store";
 
-// Enhanced lazy loading with preloading strategy
-const LiveDashboard = lazy(() =>
-  import(/* webpackChunkName: "dashboard" */ "./components/Dashboard/LiveDashboard")
+// Enhanced lazy loading with preloading strategy and performance optimization
+const LiveDashboard = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "dashboard", webpackPreload: true */ "./components/Dashboard/LiveDashboard"
+    )
 );
-const AIDashboard = lazy(() =>
-  import(/* webpackChunkName: "ai-dashboard" */ "./components/ai/AIDashboard")
+const AIDashboard = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "ai-dashboard", webpackPrefetch: true */ "./components/ai/AIDashboard"
+    )
 );
-const GoogleSheetsIntegration = lazy(() =>
-  import(/* webpackChunkName: "google-sheets" */ "./components/google/GoogleSheetsIntegration")
+const GoogleSheetsIntegration = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "google-sheets", webpackPrefetch: true */ "./components/google/GoogleSheetsIntegration"
+    )
 );
-const GoogleDriveIntegration = lazy(() =>
-  import(/* webpackChunkName: "google-drive" */ "./components/google/GoogleDriveIntegration")
+const GoogleDriveIntegration = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "google-drive", webpackPrefetch: true */ "./components/google/GoogleDriveIntegration"
+    )
 );
-const GoogleAppsScriptIntegration = lazy(() =>
-  import(/* webpackChunkName: "google-apps-script" */ "./components/google/GoogleAppsScriptIntegration")
+const GoogleAppsScriptIntegration = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "google-apps-script", webpackPrefetch: true */ "./components/google/GoogleAppsScriptIntegration"
+    )
 );
-const TelegramIntegration = lazy(() =>
-  import(/* webpackChunkName: "telegram" */ "./components/telegram/TelegramIntegration")
+const TelegramIntegration = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "telegram", webpackPrefetch: true */ "./components/telegram/TelegramIntegration"
+    )
 );
-const AutomationDashboard = lazy(() =>
-  import(/* webpackChunkName: "automation" */ "./components/automation/AutomationDashboard")
+const AutomationDashboard = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "automation", webpackPrefetch: true */ "./components/automation/AutomationDashboard"
+    )
 );
-const AutomationPanel = lazy(() =>
-  import(/* webpackChunkName: "automation" */ "./components/automation/AutomationPanelWrapper")
+const AutomationPanel = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "automation-panel", webpackPrefetch: true */ "./components/automation/AutomationPanelWrapper"
+    )
 );
-const ConfigPage = lazy(() =>
-  import(/* webpackChunkName: "config" */ "./components/automation/ConfigPageWrapper")
+const ConfigPage = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "config", webpackPrefetch: true */ "./components/automation/ConfigPageWrapper"
+    )
 );
 
-// Preload critical components
-const preloadComponent = (componentLoader) => {
-  componentLoader();
+// Intelligent preloading based on user behavior
+const preloadComponent = (componentLoader, priority = 'low') => {
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(
+      () => {
+        componentLoader();
+      },
+      { timeout: priority === "high" ? 2000 : 5000 }
+    );
+  } else {
+    setTimeout(
+      () => {
+        componentLoader();
+      },
+      priority === "high" ? 100 : 2000
+    );
+  }
 };
 
-// Preload dashboard on app start
+// Progressive preloading strategy
 if (typeof window !== 'undefined') {
+  // Immediate preload for critical routes
+  preloadComponent(
+    () => import("./components/Dashboard/LiveDashboard"),
+    "high"
+  );
+
+  // Preload frequently used components after initial load
   setTimeout(() => {
-    preloadComponent(() => import("./components/Dashboard/LiveDashboard"));
-  }, 2000);
+    preloadComponent(() => import("./components/ai/AIDashboard"), "medium");
+    preloadComponent(
+      () => import("./components/google/GoogleSheetsIntegration"),
+      "medium"
+    );
+  }, 3000);
+
+  // Preload remaining components when browser is idle
+  setTimeout(() => {
+    preloadComponent(
+      () => import("./components/google/GoogleDriveIntegration")
+    );
+    preloadComponent(
+      () => import("./components/automation/AutomationDashboard")
+    );
+  }, 5000);
 }
 
 // Home component

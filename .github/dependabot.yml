@@ -1,0 +1,17 @@
+# Dependabot configuration for automated security updates
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    reviewers:
+      - "mia-vn-team"
+    assignees:
+      - "mia-vn-team"
+    open-pull-requests-limit: 10
+    allow:
+      - dependency-type: "all"
+    ignore:
+      - dependency-name: "react-scripts"
+        versions: ["< 5.0.0"]

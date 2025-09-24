@@ -12,6 +12,7 @@ import "./App.css";
 import Loading from "./components/Common/Loading";
 import Layout from "./components/layout/Layout";
 import { store } from "./store/store";
+// import PerformanceMonitor from "./utils/PerformanceMonitor";
 
 // Enhanced lazy loading with preloading strategy and performance optimization
 const LiveDashboard = lazy(
@@ -70,7 +71,7 @@ const ConfigPage = lazy(
 );
 
 // Intelligent preloading based on user behavior
-const preloadComponent = (componentLoader, priority = 'low') => {
+const preloadComponent = (componentLoader, priority = "low") => {
   if ("requestIdleCallback" in window) {
     window.requestIdleCallback(
       () => {
@@ -89,7 +90,7 @@ const preloadComponent = (componentLoader, priority = 'low') => {
 };
 
 // Progressive preloading strategy
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   // Immediate preload for critical routes
   preloadComponent(
     () => import("./components/Dashboard/LiveDashboard"),
@@ -233,8 +234,19 @@ const Home = () => (
   </div>
 );
 
-// Main App component with Router
+// Main App component with Router và Performance Monitoring
 function App() {
+  // Initialize Performance Monitor (tạm thời disabled để test build)
+  React.useEffect(() => {
+    // const monitor = new PerformanceMonitor();
+    // monitor.startMonitoring();
+
+    // Cleanup khi component unmount
+    return () => {
+      // monitor.stopMonitoring();
+    };
+  }, []);
+
   return (
     <Provider store={store}>
       <ConfigProvider

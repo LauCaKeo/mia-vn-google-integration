@@ -434,3 +434,21 @@ export function trackRouteChange(routeName) {
     });
   };
 }
+
+// Initialize performance monitoring
+export function initializePerformanceMonitoring() {
+  // Initialize Web Vitals monitoring
+  getCLS(sendToAnalytics);
+  getFID(sendToAnalytics);
+  getFCP(sendToAnalytics);
+  getLCP(sendToAnalytics);
+  getTTFB(sendToAnalytics);
+
+  // Track resource loading performance
+  trackResourceTiming();
+
+  // Track custom metrics
+  trackCustomMetrics();
+
+  console.log('📊 Performance monitoring initialized');
+}

@@ -1,0 +1,287 @@
+# GitHub Actions CI/CD Pipeline - Phase 4A Production Deployment
+# Comprehensive automated testing, building, and deployment workflow
+
+name: 🚀 CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    # Run security scan daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      deploy_environment:
+        description: 'Environment to deploy'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - production
+
+env:
+  NODE_VERSION: '18.x'
+  REGISTRY_URL: 'https://registry.npmjs.org'
+
+jobs:
+  # Job 1: Code Quality & Security
+  quality-check:
+    name: 🔍 Quality & Security Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        registry-url: ${{ env.REGISTRY_URL }}
+
+    - name: 📦 Install Dependencies
+      run: |
+        npm ci --prefer-offline --no-audit
+        npm ls --depth=0
+
+    - name: 🔍 ESLint Check
+      run: |
+        npm run lint:check
+        echo "✅ ESLint check completed"
+
+    - name: 💅 Prettier Check
+      run: |
+        npm run format:check
+        echo "✅ Prettier check completed"
+
+    - name: 🛡️ Security Audit
+      run: |
+        npm audit --audit-level=moderate
+        npm run security:check
+        echo "✅ Security audit completed"
+
+    - name: 🔒 Dependency Vulnerability Check
+      uses: actions/dependency-review-action@v4
+      if: github.event_name == 'pull_request'
+
+    - name: 📊 Upload Security Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-report
+        path: security-audit.json
+        retention-days: 30
+
+  # Job 2: Automated Testing
+  test:
+    name: 🧪 Automated Testing
+    runs-on: ubuntu-latest
+    needs: quality-check
+    timeout-minutes: 20
+
+    strategy:
+      matrix:
+        test-type: [unit, integration]
+
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: 📦 Install Dependencies
+      run: npm ci --prefer-offline --no-audit
+
+    - name: 🧪 Run Unit Tests
+      if: matrix.test-type == 'unit'
+      run: |
+        npm run test
+        echo "✅ Unit tests completed"
+
+    - name: 🔗 Run Integration Tests
+      if: matrix.test-type == 'integration'
+      run: |
+        npm run test:integration
+        echo "✅ Integration tests completed"
+      env:
+        CI: true
+
+    - name: 📊 Upload Test Coverage
+      uses: codecov/codecov-action@v4
+      if: matrix.test-type == 'unit'
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: 📋 Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results-${{ matrix.test-type }}
+        path: |
+          coverage/
+          test-results/
+        retention-days: 30
+
+  # Job 3: Build & Performance Check
+  build:
+    name: 🏗️ Build & Performance
+    runs-on: ubuntu-latest
+    needs: [quality-check, test]
+    timeout-minutes: 15
+
+    outputs:
+      build-size: ${{ steps.build-stats.outputs.size }}
+      gzip-size: ${{ steps.build-stats.outputs.gzip }}
+
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: 📦 Install Dependencies
+      run: npm ci --prefer-offline --no-audit
+
+    - name: 🏗️ Build Application
+      run: |
+        npm run build:prod
+        echo "✅ Build completed"
+      env:
+        CI: true
+        GENERATE_SOURCEMAP: true
+        REACT_APP_VERSION: ${{ github.sha }}
+        REACT_APP_BUILD_TIME: ${{ github.run_number }}
+
+    - name: 📊 Analyze Bundle Size
+      id: build-stats
+      run: |
+        BUILD_SIZE=$(du -sh build | cut -f1)
+        GZIP_SIZE=$(find build -name "*.js" -exec gzip -c {} \; | wc -c | awk '{print $1/1024/1024 "MB"}')
+        echo "size=$BUILD_SIZE" >> $GITHUB_OUTPUT
+        echo "gzip=$GZIP_SIZE" >> $GITHUB_OUTPUT
+        echo "📦 Build size: $BUILD_SIZE"
+        echo "🗜️ Gzipped size: $GZIP_SIZE"
+
+    - name: 📦 Cache Build Artifacts
+      uses: actions/cache@v4
+      with:
+        path: build/
+        key: build-${{ github.sha }}
+        restore-keys: |
+          build-${{ github.ref_name }}-
+          build-
+
+    - name: 📋 Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-files
+        path: build/
+        retention-days: 30
+
+  # Job 4: Deploy to Vercel (Staging)
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_environment == 'staging')
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.url }}
+    timeout-minutes: 10
+
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 📦 Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-files
+        path: build/
+
+    - name: 🚀 Deploy to Vercel
+      id: deploy
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./
+        scope: ${{ secrets.VERCEL_ORG_ID }}
+
+  # Job 5: Deploy to Production
+  deploy-production:
+    name: 🌐 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_environment == 'production')
+    environment:
+      name: production
+      url: https://mia-vn-google-integration.vercel.app
+    timeout-minutes: 15
+
+    steps:
+    - name: 📥 Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: 📦 Download Build Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-files
+        path: build/
+
+    - name: 🌐 Deploy to Production
+      id: deploy
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
+        working-directory: ./
+        scope: ${{ secrets.VERCEL_ORG_ID }}
+
+    - name: 🎉 Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          🚀 **Production Deployment v${{ github.run_number }}**
+
+          📦 **Build Stats:**
+          - Bundle Size: ${{ needs.build.outputs.build-size }}
+          - Gzipped Size: ${{ needs.build.outputs.gzip-size }}
+
+          🔗 **Links:**
+          - 🌐 Production: https://mia-vn-google-integration.vercel.app
+
+          ✅ **Quality Checks:**
+          - Security Scan: Passed
+          - Unit Tests: Passed
+          - Integration Tests: Passed
+
+          **Commit:** ${{ github.sha }}
+        draft: false
+        prerelease: false

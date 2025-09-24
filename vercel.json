@@ -1,30 +1,93 @@
 {
   "version": 2,
   "name": "mia-vn-google-integration",
+  "alias": [
+    "mia-vn-google-integration.vercel.app"
+  ],
+
   "builds": [
     {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "build"
+        "distDir": "build",
+        "framework": "create-react-app"
       }
     }
   ],
+"routes": [
+  {
+    "src": "/api/(.*)",
+    "dest": "/api/$1",
+    "headers": {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept, Authorization"
+    }
+  },
+  {
+    "src": "/static/(.*)",
+    "dest": "/static/$1",
+    "headers": {
+      "Cache-Control": "public, max-age=31536000, immutable"
+    }
+  },
+  {
+    "src": "/service-worker.js",
+    "dest": "/service-worker.js",
+    "headers": {
+      "Service-Worker-Allowed": "/",
+      "Cache-Control": "public, max-age=0, must-revalidate"
+    }
+  },
+  {
+    "src": "/manifest.json",
+    "dest": "/manifest.json",
+    "headers": {
+      "Content-Type": "application/manifest+json",
+      "Cache-Control": "public, max-age=3600"
+    }
+  },
+  {
+    "src": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp|avif))$",
+    "dest": "/$1",
+    "headers": {
+      "Cache-Control": "public, max-age=31536000, immutable"
+    }
+  },
+  {
+    "src": "/(.*)",
+    "dest": "/index.html"
+  }
+],
+
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
+
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "REACT_APP_NAME": "@vercel/env:REACT_APP_NAME",
+    "REACT_APP_VERSION": "@vercel/env:REACT_APP_VERSION",
+    "REACT_APP_CDN_IMAGES": "@vercel/env:REACT_APP_CDN_IMAGES",
+    "REACT_APP_RUM_ENDPOINT": "@vercel/env:REACT_APP_RUM_ENDPOINT"
   },
+
   "build": {
     "env": {
-      "GENERATE_SOURCEMAP": "false",
+      "CI": "true",
+      "GENERATE_SOURCEMAP": "true",
       "INLINE_RUNTIME_CHUNK": "false",
       "IMAGE_INLINE_SIZE_LIMIT": "0",
-      "CI": "false"
+      "REACT_APP_BUILD_TIME": "@vercel/env:VERCEL_GIT_COMMIT_REF",
+      "REACT_APP_COMMIT_SHA": "@vercel/env:VERCEL_GIT_COMMIT_SHA"
     }
   },
   "headers": [
@@ -32,16 +95,16 @@
       "source": "/(.*)",
       "headers": [
         {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
           "key": "X-Frame-Options",
           "value": "DENY"
         },
         {
           "key": "X-XSS-Protection",
           "value": "1; mode=block"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
         },
         {
           "key": "Strict-Transport-Security",
@@ -53,11 +116,11 @@
         },
         {
           "key": "Permissions-Policy",
-          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()"
+          "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https:; connect-src 'self' https://sheets.googleapis.com https://drive.googleapis.com https://www.googleapis.com https://accounts.google.com; frame-src https://accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self';"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://*.googleapis.com https://accounts.google.com https://www.google-analytics.com https://analytics.google.com wss:; frame-src https://accounts.google.com; object-src 'none'; base-uri 'self'; form-action 'self';"
         }
       ]
     },
@@ -73,13 +136,48 @@
           "value": "nosniff"
         }
       ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-Requested-With, Content-Type, Accept, Authorization"
+        }
+      ]
     }
   ],
+
   "redirects": [
     {
       "source": "/home",
       "destination": "/",
       "permanent": true
     }
-  ]
+  ],
+  "functions": {
+    "app/api/**/*.js": {
+      "runtime": "nodejs18.x",
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "regions": [
+    "iad1",
+    "hnd1",
+    "syd1"
+  ],
+  "github": {
+    "enabled": true,
+    "autoAlias": false,
+    "silent": true
+  }
 }

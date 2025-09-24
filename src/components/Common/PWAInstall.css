@@ -1,0 +1,257 @@
+/* PWA Install Component Styles */
+.pwa-install-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.pwa-install-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pwa-install-icon img {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pwa-install-text {
+  flex: 1;
+}
+
+.pwa-install-text h3 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.pwa-install-text p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.pwa-install-actions {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.pwa-install-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.pwa-install-btn.primary {
+  background: white;
+  color: #667eea;
+}
+
+.pwa-install-btn.primary:hover {
+  background: #f8f9ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pwa-install-btn.secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.pwa-install-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* PWA Status Styles */
+.pwa-status {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+.pwa-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pwa-status-indicator.online {
+  color: #10b981;
+}
+
+.pwa-status-indicator.offline {
+  color: #ef4444;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.pwa-status-indicator.online .status-dot {
+  background: #10b981;
+}
+
+.pwa-status-indicator.offline .status-dot {
+  background: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.offline-message {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #92400e;
+}
+
+.offline-message p {
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pwa-install-banner {
+    padding: 12px 16px;
+  }
+
+  .pwa-install-content {
+    gap: 12px;
+  }
+
+  .pwa-install-icon img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .pwa-install-text h3 {
+    font-size: 16px;
+  }
+
+  .pwa-install-text p {
+    font-size: 13px;
+  }
+
+  .pwa-install-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pwa-install-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pwa-install-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .pwa-install-actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .pwa-status {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .pwa-install-banner {
+    background: #000;
+    border-top: 2px solid #fff;
+  }
+
+  .pwa-install-btn.primary {
+    background: #fff;
+    color: #000;
+    border: 2px solid #000;
+  }
+
+  .pwa-install-btn.secondary {
+    border-color: #fff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .pwa-install-banner {
+    animation: none;
+  }
+
+  .status-dot {
+    animation: none;
+  }
+
+  .pwa-install-btn {
+    transition: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .pwa-status-indicator {
+    background: #1f2937;
+    color: white;
+  }
+
+  .offline-message {
+    background: #451a03;
+    border-color: #f59e0b;
+    color: #fbbf24;
+  }
+}

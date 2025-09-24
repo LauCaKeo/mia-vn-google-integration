@@ -1,0 +1,102 @@
+{
+  "timestamp": "2025-09-24T07:11:22.304Z",
+  "security": {
+    "timestamp": "2025-09-24T07:11:18.797Z",
+    "totalVulnerabilities": 0,
+    "critical": 0,
+    "high": 0,
+    "moderate": 0,
+    "low": 0,
+    "info": 0,
+    "vulnerabilities": [],
+    "recommendations": [
+      "✅ Excellent: No vulnerabilities detected"
+    ]
+  },
+  "dependencies": {
+    "outdated": 11,
+    "packages": [
+      {
+        "package": "@types/react",
+        "current": "18.3.24",
+        "wanted": "18.3.24",
+        "latest": "19.1.13",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\@types\\react"
+      },
+      {
+        "package": "@types/react-dom",
+        "current": "18.3.7",
+        "wanted": "18.3.7",
+        "latest": "19.1.9",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\@types\\react-dom"
+      },
+      {
+        "package": "@vitejs/plugin-react",
+        "current": "4.7.0",
+        "wanted": "4.7.0",
+        "latest": "5.0.3",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\@vitejs\\plugin-react"
+      },
+      {
+        "package": "concurrently",
+        "current": "8.2.2",
+        "wanted": "8.2.2",
+        "latest": "9.2.1",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\concurrently"
+      },
+      {
+        "package": "jsdom",
+        "current": "24.1.3",
+        "wanted": "24.1.3",
+        "latest": "27.0.0",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\jsdom"
+      },
+      {
+        "package": "react",
+        "current": "18.3.1",
+        "wanted": "18.3.1",
+        "latest": "19.1.1",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\react"
+      },
+      {
+        "package": "react-dom",
+        "current": "18.3.1",
+        "wanted": "18.3.1",
+        "latest": "19.1.1",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\react-dom"
+      },
+      {
+        "package": "react-router-dom",
+        "current": "6.30.1",
+        "wanted": "6.30.1",
+        "latest": "7.9.1",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\react-router-dom"
+      },
+      {
+        "package": "rimraf",
+        "current": "5.0.10",
+        "wanted": "5.0.10",
+        "latest": "6.0.1",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\rimraf"
+      },
+      {
+        "package": "vite",
+        "current": "6.3.6",
+        "wanted": "6.3.6",
+        "latest": "7.1.7",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\vite"
+      },
+      {
+        "package": "web-vitals",
+        "current": "2.1.4",
+        "wanted": "2.1.4",
+        "latest": "5.1.0",
+        "location": "C:\\Users\\PC\\mia-vn-google-integration-main\\node_modules\\web-vitals"
+      }
+    ]
+  },
+  "recommendations": [
+    "✅ Excellent: No vulnerabilities detected",
+    "📦 Consider updating outdated dependencies"
+  ]
+}

@@ -8,65 +8,61 @@ import {
 } from 'react-router-dom';
 import { ConfigProvider, theme } from 'antd';
 import viVN from 'antd/locale/vi_VN';
-import './global.css'; /* ✅ Import global styles first */
 import './App.css';
 import Loading from './components/Common/Loading';
 import Layout from './components/layout/Layout';
 import { store } from './store/store';
 
-// Enhanced lazy loading with preloading strategy
-const LiveDashboard = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "dashboard" */ './components/Dashboard/LiveDashboard'
-    )
+// Test component - Simple Google Sheets
+const TestGoogleSheets = () => (
+  <div
+    style={{
+      padding: '20px',
+      background: '#f8fafc',
+      minHeight: 'calc(100vh - 64px)',
+      display: 'flex',
+      flexDirection: 'column',
+    }}
+  >
+    <h1>🧪 Test Google Sheets Component</h1>
+    <div
+      style={{
+        background: 'white',
+        padding: '20px',
+        borderRadius: '8px',
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <h2>Simple Test Layout</h2>
+      <p>
+        This is a test to check if the issue is with the component or the
+        layout.
+      </p>
+      <div
+        style={{
+          background: '#e2e8f0',
+          padding: '20px',
+          borderRadius: '8px',
+          marginTop: '20px',
+          flex: 1,
+        }}
+      >
+        <h3>Content Area</h3>
+        <p>This should not extend beyond the viewport.</p>
+      </div>
+    </div>
+  </div>
 );
-const AIDashboard = lazy(
-  () =>
-    import(/* webpackChunkName: "ai-dashboard" */ './components/ai/AIDashboard')
-);
+
+// Original GoogleSheetsIntegration
 const GoogleSheetsIntegration = lazy(
   () =>
     import(
       /* webpackChunkName: "google-sheets" */ './components/google/GoogleSheetsIntegration'
     )
 );
-const GoogleDriveIntegration = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "google-drive" */ './components/google/GoogleDriveIntegration'
-    )
-);
-const GoogleAppsScriptIntegration = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "google-apps-script" */ './components/google/GoogleAppsScriptIntegration'
-    )
-);
-const TelegramIntegration = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "telegram" */ './components/telegram/TelegramIntegration'
-    )
-);
-const AutomationDashboard = lazy(
-  () =>
-    import(
-      /* webpackChunkName: "automation" */ './components/automation/AutomationDashboard'
-    )
-);
-
-// Preload critical components
-const preloadComponent = componentLoader => {
-  componentLoader();
-};
-
-// Preload dashboard on app start
-if (typeof window !== 'undefined') {
-  setTimeout(() => {
-    preloadComponent(() => import('./components/Dashboard/LiveDashboard'));
-  }, 2000);
-}
 
 // Home component
 const Home = () => (
@@ -205,22 +201,11 @@ function App() {
               <Suspense fallback={<Loading />}>
                 <Routes>
                   <Route path='/' element={<Home />} />
-                  <Route path='/dashboard' element={<LiveDashboard />} />
-                  <Route path='/ai-analytics' element={<AIDashboard />} />
+                  <Route path='/test-sheets' element={<TestGoogleSheets />} />
                   <Route
                     path='/google-sheets'
                     element={<GoogleSheetsIntegration />}
                   />
-                  <Route
-                    path='/google-drive'
-                    element={<GoogleDriveIntegration />}
-                  />
-                  <Route
-                    path='/google-apps-script'
-                    element={<GoogleAppsScriptIntegration />}
-                  />
-                  <Route path='/telegram' element={<TelegramIntegration />} />
-                  <Route path='/automation' element={<AutomationDashboard />} />
                   <Route path='*' element={<Navigate to='/' replace />} />
                 </Routes>
               </Suspense>

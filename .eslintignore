@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+build/
+dist/
+coverage/
+
+# Config files
+*.config.js
+*.config.ts
+vite.config.js
+vitest.config.js
+lighthouserc.js
+
+# Environment files
+.env*
+
+# Logs
+*.log
+
+# Generated files
+*.min.js
+*.min.css
+
+# Public assets
+public/
+
+# Scripts
+scripts/
+
+# Documentation
+docs/
+doc/
+*.md
+
+# Test files (if needed)
+# **/*.test.js
+# **/*.spec.js

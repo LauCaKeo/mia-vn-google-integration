@@ -1,17 +1,118 @@
 # Dependabot configuration for automated security updates
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-    reviewers:
-      - "mia-vn-team"
+      interval: 'weekly'
     assignees:
-      - "mia-vn-team"
+      - 'mia-vn-team'
     open-pull-requests-limit: 10
     allow:
-      - dependency-type: "all"
+      - dependency-type: 'all'
     ignore:
-      - dependency-name: "react-scripts"
-        versions: ["< 5.0.0"]
+      - dependency-name: 'react-scripts'
+        versions: ['< 5.0.0']
+      - dependency-name: 'react-dom'
+        versions: ['< 18.0.0']
+      - dependency-name: 'react'
+        versions: ['< 18.0.0']
+      - dependency-name: 'react-router-dom'
+        versions: ['< 6.0.0']
+      - dependency-name: 'react-router'
+        versions: ['< 6.0.0']
+      - dependency-name: 'react-redux'
+        versions: ['< 8.0.0']
+      - dependency-name: 'react-scripts'
+        versions: ['< 5.0.0']
+      - dependency-name: 'typescript'
+        versions: ['< 5.0.0']
+      - dependency-name: 'eslint'
+        versions: ['< 9.0.0']
+      - dependency-name: 'prettier'
+        versions: ['< 3.0.0']
+      - dependency-name: 'jest'
+        versions: ['< 29.0.0']
+      - dependency-name: 'webpack'
+        versions: ['< 5.0.0']
+      - dependency-name: 'webpack-dev-server'
+        versions: ['< 4.0.0']
+      - dependency-name: 'webpack-cli'
+        versions: ['< 4.0.0']
+      - dependency-name: 'webpack-merge'
+        versions: ['< 5.0.0']
+      - dependency-name: 'webpack-bundle-analyzer'
+        versions: ['< 4.0.0']
+      - dependency-name: 'webpack-dev-middleware'
+        versions: ['< 4.0.0']
+      - dependency-name: 'webpack-hot-middleware'
+        versions: ['< 2.0.0']
+      - dependency-name: 'webpack-node-externals'
+        versions: ['< 3.0.0']
+      - dependency-name: 'webpack-node-modules-analyzer'
+        versions: ['< 1.0.0']
+      - dependency-name: 'webpack-bundle-analyzer'
+        versions: ['< 4.0.0']
+      - dependency-name: 'webpack-dev-middleware'
+        versions: ['< 4.0.0']
+      - dependency-name: 'webpack-hot-middleware'
+        versions: ['< 2.0.0']
+      - dependency-name: 'webpack-node-externals'
+        versions: ['< 3.0.0']
+      - dependency-name: 'webpack-node-modules-analyzer'
+        versions: ['< 1.0.0']
+      - dependency-name: 'webpack-bundle-analyzer'
+        versions: ['< 4.0.0']
+      - dependency-name: 'webpack-dev-middleware'
+        versions: ['< 4.0.0']
+      - dependency-name: 'webpack-hot-middleware'
+        versions: ['< 2.0.0']
+      - dependency-name: 'webpack-node-externals'
+        versions: ['< 3.0.0']
+      - dependency-name: 'webpack-node-modules-analyzer'
+        versions: ['< 1.0.0']
+
+  - package-ecosystem: 'docker'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    assignees:
+      - 'mia-vn-team'
+    open-pull-requests-limit: 10
+    allow:
+      - dependency-type: 'all'
+    ignore:
+      - dependency-name: 'docker'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v2'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v3'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v4'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v5'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v6'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v7'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v8'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v9'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v10'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v11'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v12'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v13'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v14'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v15'
+        versions: ['< 25.0.0']
+      - dependency-name: 'docker-compose-v16'
+        versions: ['< 25.0.0']

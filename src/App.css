@@ -1,6 +1,6 @@
 .App {
   height: 100vh;
-  overflow: hidden;
+  overflow: auto; /* ✅ Fix: Allow scrolling instead of hidden */
 }
 
 /* Home Container Styles */
@@ -56,7 +56,7 @@
 }
 
 .feature-card::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;

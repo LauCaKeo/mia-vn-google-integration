@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "MIA.vn Google Integration Platform - Comprehensive automation and data management system",
   "private": true,
+  "type": "module",
   "homepage": ".",
   "author": "MIA.vn Team",
   "license": "MIT",
@@ -57,10 +58,14 @@
     "deploy": "node scripts/deploy.js",
     "health-check": "node scripts/health-check.js",
     "test:integration": "npm run test:google && npm run health-check",
-    "lint": "eslint src/ --ext .js,.jsx --fix --max-warnings=0",
-    "lint:check": "eslint src/ --ext .js,.jsx --max-warnings=0",
+    "test:ci": "vitest run --coverage",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx --fix --max-warnings=0",
+    "lint:check": "eslint src/ --ext .js,.jsx,.ts,.tsx --max-warnings=0",
     "format": "prettier --write src/ --ignore-path .gitignore",
     "format:check": "prettier --check src/ --ignore-path .gitignore",
+    "analyze:size": "npm run build && npx vite-bundle-analyzer build",
+    "lighthouse": "lhci autorun",
     "clean": "rimraf build node_modules package-lock.json",
     "clean:build": "rimraf build",
     "dev:fullstack": "concurrently \"npm run dev\" \"node server.js\"",
@@ -69,17 +74,6 @@
     "security:fix": "npm audit fix",
     "serve": "serve -s build -l 3000",
     "preview:serve": "npm run build:prod && npm run serve"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "rules": {
-      "no-unused-vars": "warn",
-      "no-console": "warn",
-      "prefer-const": "error"
-    }
   },
   "browserslist": {
     "production": [
@@ -95,17 +89,28 @@
     ]
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@eslint/js": "^9.38.0",
+    "@lhci/cli": "^0.15.1",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.5.2",
     "@types/react": "^18.3.24",
     "@types/react-dom": "^18.3.7",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
     "@vitejs/plugin-react": "^4.7.0",
+    "@vitest/coverage-v8": "^4.0.4",
     "@vitest/ui": "^3.2.4",
     "concurrently": "^9.2.1",
     "dotenv": "^17.2.2",
     "eslint": "^9.36.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
     "http-proxy-middleware": "^3.0.5",
     "jsdom": "^24.1.3",
     "prettier": "^3.6.2",

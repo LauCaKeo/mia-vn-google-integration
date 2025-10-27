@@ -8,7 +8,7 @@ on:
 
 env:
   NODE_VERSION: '18.x'
-  CACHE_KEY: node-modules-${{ hashFiles('**/package-lock.json') }}
+  CACHE_KEY: node-modules-${{ hashFiles('**/package-lock.json') }}-${{ github.sha }} # hash the package-lock.json file and the current commit sha to get a unique cache key
 
 jobs:
   # Quality Assurance

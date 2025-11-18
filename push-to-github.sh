@@ -70,28 +70,53 @@ git commit -m "🚀 Complete MIA.vn Google Integration Platform
 - Monitoring dashboard
 - Automated health checks"
 
-# Get repository URL
-echo ""
-echo -e "${YELLOW}📝 GitHub Repository Setup${NC}"
-echo ""
-echo "Please provide your GitHub repository URL:"
-echo "Example: https://github.com/username/mia-vn-google-integration.git"
-echo ""
-read -p "Repository URL: " REPO_URL
+# Check if remote exists
+if git remote | grep -q "origin"; then
+    REPO_URL=$(git remote get-url origin)
+    log_info "Using existing remote: $REPO_URL"
 
-if [[ -z "$REPO_URL" ]]; then
-    log_warn "No repository URL provided. Exiting..."
-    exit 1
+    # Convert SSH to HTTPS if needed
+    if [[ "$REPO_URL" == git@github.com:* ]]; then
+        log_warn "SSH URL detected. Converting to HTTPS..."
+        REPO_URL=$(echo "$REPO_URL" | sed 's|git@github.com:|https://github.com/|' | sed 's|\.git$||')
+        REPO_URL="${REPO_URL}.git"
+        git remote set-url origin "$REPO_URL"
+        log_info "Converted to HTTPS: $REPO_URL"
+    fi
+else
+    # Get repository URL
+    echo ""
+    echo -e "${YELLOW}📝 GitHub Repository Setup${NC}"
+    echo ""
+    echo "Please provide your GitHub repository URL:"
+    echo "Example: https://github.com/username/mia-vn-google-integration.git"
+    echo ""
+    read -p "Repository URL: " REPO_URL
+
+    if [[ -z "$REPO_URL" ]]; then
+        log_warn "No repository URL provided. Exiting..."
+        exit 1
+    fi
+
+    # Add remote
+    log_info "Adding remote repository..."
+    git remote add origin "$REPO_URL"
 fi
-
-# Add remote
-log_info "Adding remote repository..."
-git remote remove origin 2>/dev/null || true
-git remote add origin "$REPO_URL"
 
 # Push to GitHub
 log_info "Pushing to GitHub..."
-git push -u origin main
+if git push -u origin main; then
+    log_info "✅ Push successful!"
+else
+    log_warn "⚠️  Push failed. Trying with force..."
+    read -p "Do you want to force push? (y/N): " FORCE_PUSH
+    if [[ "$FORCE_PUSH" == "y" || "$FORCE_PUSH" == "Y" ]]; then
+        git push -u origin main --force
+    else
+        log_warn "Push cancelled."
+        exit 1
+    fi
+fi
 
 echo ""
 echo -e "${GREEN}🎉 Successfully pushed to GitHub!${NC}"

@@ -56,7 +56,7 @@
     "test:google": "node scripts/testGoogleConnection.js",
     "setup": "node scripts/setup.js",
     "deploy": "node scripts/deploy.js",
-    "health-check": "node scripts/health-check.js",
+    "health-check": "node scripts/health-check.cjs",
     "test:integration": "npm run test:google && npm run health-check",
     "test:ci": "vitest run --coverage",
     "type-check": "tsc --noEmit",

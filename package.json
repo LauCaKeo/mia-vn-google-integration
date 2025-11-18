@@ -53,7 +53,7 @@
     "test": "vitest --coverage --run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:google": "node scripts/testGoogleConnection.js",
+    "test:google": "node scripts/testGoogleConnection.cjs",
     "setup": "node scripts/setup.js",
     "deploy": "node scripts/deploy.js",
     "health-check": "node scripts/health-check.cjs",

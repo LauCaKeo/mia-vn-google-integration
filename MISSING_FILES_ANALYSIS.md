@@ -11,12 +11,14 @@
 **File:** `server.js` (root directory)
 
 **Lý do cần:**
+
 - ✅ Được đề cập trong `package.json` script: `"dev:fullstack": "concurrently \"npm run dev\" \"node server.js\""`
 - ✅ Được đề cập trong `backend-package.json` với `"main": "server.js"`
 - ✅ Được đề cập trong nhiều documentation files
 - ✅ Có dependencies trong `backend-package.json` (Express, Nodemailer, Node-cron, CORS)
 
 **Chức năng dự kiến:**
+
 - Express server (Port 3001 hoặc 8000)
 - Email service (Nodemailer)
 - Task scheduling (Node-cron)
@@ -36,16 +38,21 @@
 **File:** `src/services/alertService.js`
 
 **Lý do cần:**
+
 - ✅ Được đề cập trong `doc/FILE_LIST.md`:
+
   ```
   - alertService.js - Service gửi cảnh báo email/telegram
   ```
+
 - ✅ Được đề cập trong `doc/PROJECT_SUMMARY.md`:
+
   ```
   ├── alertService.js          # Service cảnh báo
   ```
 
 **Chức năng dự kiến:**
+
 - Gửi cảnh báo qua Email
 - Gửi cảnh báo qua Telegram
 - Quản lý alert rules
@@ -62,16 +69,21 @@
 **File:** `src/services/reportService.js`
 
 **Lý do cần:**
+
 - ✅ Được đề cập trong `doc/FILE_LIST.md`:
+
   ```
   - reportService.js - Service tạo báo cáo và thống kê
   ```
+
 - ✅ Được đề cập trong `doc/PROJECT_SUMMARY.md`:
+
   ```
   └── reportService.js         # Service báo cáo
   ```
 
 **Chức năng dự kiến:**
+
 - Tạo báo cáo từ dữ liệu
 - Export reports (PDF, Excel, CSV)
 - Report scheduling
@@ -86,6 +98,7 @@
 ## ✅ **CÁC FILE ĐÃ CÓ**
 
 ### **Configuration Files:**
+
 - ✅ `.gitignore` - Git ignore rules
 - ✅ `.env` - Environment variables (local, bị ignore)
 - ✅ `env.example` - Environment template
@@ -101,23 +114,27 @@
 - ✅ `nginx.conf` - Nginx configuration
 
 ### **Package Files:**
+
 - ✅ `package.json` - Frontend dependencies
 - ✅ `backend-package.json` - Backend dependencies (nhưng chưa có code)
 - ✅ `package-lock.json` - Lock file
 
 ### **Documentation:**
+
 - ✅ `README.md` - Main documentation
 - ✅ `SETUP_GUIDE.md` - Setup guide
 - ✅ `PROJECT_ARCHITECTURE.md` - Architecture documentation
 - ✅ Nhiều file documentation khác trong `doc/`
 
 ### **Scripts:**
+
 - ✅ `scripts/setup.js` - Setup script
 - ✅ `scripts/deploy.js` - Deploy script
 - ✅ `scripts/testGoogleConnection.js` - Test script
 - ✅ `scripts/health-check.js` - Health check
 
 ### **Source Code:**
+
 - ✅ `src/App.jsx` - Main app component
 - ✅ `src/index.jsx` - Entry point
 - ✅ `src/services/googleAuth.js` - Google Auth
@@ -130,11 +147,13 @@
 ## 📊 **TỔNG KẾT**
 
 ### **Files thiếu quan trọng:**
+
 1. ❌ `server.js` - **QUAN TRỌNG NHẤT** (được reference trong nhiều nơi)
 2. ⚠️ `src/services/alertService.js` - Được đề cập trong docs
 3. ⚠️ `src/services/reportService.js` - Được đề cập trong docs
 
 ### **Files đã có đầy đủ:**
+
 - ✅ Configuration files
 - ✅ Package files
 - ✅ Documentation
@@ -147,40 +166,49 @@
 ## 🎯 **KHUYẾN NGHỊ**
 
 ### **1. Tạo Backend Server (server.js):**
+
 **Ưu tiên:** 🔴 **CAO**
 
 **Lý do:**
+
 - Được reference trong `package.json` scripts
 - Có dependencies sẵn trong `backend-package.json`
 - Cần thiết cho fullstack development
 - Cần thiết cho email, scheduling, alerts
 
 **Hành động:**
+
 - Tạo `server.js` trong root directory
 - Implement Express server với các endpoints cần thiết
 - Kết nối với Frontend qua API
 
 ### **2. Tạo Alert Service:**
+
 **Ưu tiên:** 🟡 **TRUNG BÌNH**
 
 **Lý do:**
+
 - Được đề cập trong documentation
 - Có thể cần thiết nếu không dùng backend server
 - Hoặc có thể tích hợp vào backend server
 
 **Hành động:**
+
 - Tạo `src/services/alertService.js` nếu cần
 - Hoặc tích hợp vào backend server
 
 ### **3. Tạo Report Service:**
+
 **Ưu tiên:** 🟡 **TRUNG BÌNH**
 
 **Lý do:**
+
 - Được đề cập trong documentation
 - Có thể đã được tích hợp vào Dashboard components
 - Hoặc có thể tích hợp vào backend server
 
 **Hành động:**
+
 - Kiểm tra xem Dashboard có đủ chức năng report chưa
 - Tạo service riêng nếu cần
 - Hoặc tích hợp vào backend server
@@ -206,4 +234,3 @@
 ---
 
 **Kết luận:** File thiếu quan trọng nhất là **`server.js`** - backend server. Các service files khác có thể không cần thiết tùy vào kiến trúc dự án.
-

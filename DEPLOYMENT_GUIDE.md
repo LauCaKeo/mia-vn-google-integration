@@ -198,7 +198,7 @@ sudo apt-get install nginx
 
 ```bash
 # Clone and build
-git clone https://github.com/mia-vn/google-integration.git .
+git clone https://github.com/laucakeo/mia-vn-google-integration.git .
 npm install
 npm run build:prod
 
